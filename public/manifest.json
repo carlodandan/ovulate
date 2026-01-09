@@ -1,0 +1,112 @@
+{
+"name": "Ovulate",
+"short_name": "ovulate",
+"start_url": "/",
+"display": "standalone",
+"description": "Web application for Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window.",
+"lang": "en",
+"dir": "auto",
+"theme_color": "#BC2ABD",
+"background_color": "#FCF2F8",
+"orientation": "any",
+"icons": [
+    {
+        "src": "/logo/ovulate-circle.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+    },
+    {
+        "src": "/logo/ovulate-square.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+    },
+    {
+        "src": "/icons/android-icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+    },
+    {
+        "src": "/icons/apple-icon-180x180.png",
+        "sizes": "180x180",
+        "type": "image/png",
+        "purpose": "any"
+    },
+    {
+        "src": "/icons/favicon-96x96.png",
+        "sizes": "96x96",
+        "type": "image/png",
+        "purpose": "any"
+    },
+    {
+        "src": "/icons/favicon-32x32.png",
+        "sizes": "32x32",
+        "type": "image/png",
+        "purpose": "any"
+    },
+    {
+        "src": "/icons/favicon-16x16.png",
+        "sizes": "16x16",
+        "type": "image/png",
+        "purpose": "any"
+    }
+],
+"screenshots": [
+    {
+        "src": "/screenshots/ovulate-desktop.png",
+        "sizes": "1600x805",
+        "type": "image/png",
+        "form_factor": "wide",
+        "description": "A screenshot of the home page - web"
+    },
+    {
+        "src": "/screenshots/ovulate-mobile.png",
+        "sizes": "360x755",
+        "type": "image/png",
+        "form_factor": "narrow",
+        "description": "A screenshot of the home page - mobile"
+    }
+],
+"related_applications": [],
+"prefer_related_applications": false,
+"shortcuts": [
+    {
+      "name": "Exam for Professional",
+      "url": "/exam/professional",
+      "description": "URL for Exam for Professional.",
+      "icons": [{
+        "src": "/icons/favicon-96x96.png",
+        "sizes": "96x96"
+      }]
+    },
+    {
+      "name": "Exam for Sub-Professional",
+      "url": "/exam/subprofessional",
+      "description": "URL for Exam for Sub-Professional.",
+      "icons": [{
+        "src": "/icons/favicon-96x96.png",
+        "sizes": "96x96"
+      }]
+    },
+    {
+      "name": "Practice Exam",
+      "url": "/exam/practice",
+      "description": "URL for Practice.",
+      "icons": [{
+        "src": "/icons/favicon-96x96.png",
+        "sizes": "96x96"
+      }]
+    },
+    {
+      "name": "Result Page",
+      "url": "/results",
+      "description": "URL for Result Page.",
+      "icons": [{
+        "src": "/icons/favicon-96x96.png",
+        "sizes": "96x96"
+      }]
+    }
+  ]
+}
