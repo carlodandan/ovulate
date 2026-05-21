@@ -2,11 +2,13 @@
 
 :root {
   font-family: system-ui, -apple-system, sans-serif;
+  scroll-behavior: smooth;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -21,4 +23,22 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a855f7;
+}
+
+/* Custom scrollbar utility for side panels */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e9d5ff;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c084fc;
 }

@@ -74,7 +74,10 @@ function App() {
 
           {/* Right Column - Predictions */}
           <div className="lg:col-span-1">
-            <div id="predictions" className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-lg p-6 sticky top-6">
+            <div 
+              id="predictions" 
+              className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-lg p-6 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto custom-scrollbar"
+            >
               <Predictions cycles={cycles} />
             </div>
           </div>
