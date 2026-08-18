@@ -4,6 +4,7 @@ Ovulate is a privacy-focused, offline-first menstrual cycle tracker built with R
 
 ## Features
 
+- Added Tauri Support for as Desktop (windows) app, not just PWA.
 - Cycle logging and average length tracking.
 - Ovulation and fertile window predictions.
 - Interactive calendar view with an educational safe and unsafe periods overlay.
@@ -41,18 +42,18 @@ Ensure you have Node.js and pnpm installed.
 
 3. Start the development server:
    ```bash
-   pnpm dev
+   pnpm run dev (for vite) / pnpm tauri dev (for tauri)
    ```
 
 4. Build for production:
    ```bash
-   pnpm build
+   pnpm run build (for vite) / pnpm tauri build (for tauri)
    ```
 
 ## Technology Stack
 
 - Frontend Library: React 19
-- Build Tool: Vite 7
+- Build Tool: Vite 7 / Tauri 2.0
 - CSS Framework: Tailwind CSS 4
 - Package Manager: pnpm
 

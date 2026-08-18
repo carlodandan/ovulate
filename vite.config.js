@@ -31,4 +31,9 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  server: {
+    watch: {
+      ignored: ["**/src-tauri/**"],
+    },
+  }
 })
