@@ -1,4 +1,4 @@
-name: Build GoldenFur
+name: Build Ovulate
 
 on:
   workflow_dispatch:
