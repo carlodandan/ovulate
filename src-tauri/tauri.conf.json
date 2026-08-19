@@ -37,5 +37,14 @@
       "icons/128x128@2x.png",
       "icons/icon.ico"
     ]
+  },
+
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM5QTA3NkY4RkE1RUI4NjYKUldSbXVGNzYrSGFnT2VHOW1mUEZ1WHltcmpqU01sUFhuUm5scWZpWDF4UzFERjRxV3h4cVdCZ1YK",
+      "endpoints": [
+        "https://github.com/carlodandan/ovulate/releases/latest/download/latest.json"
+      ]
+    }
   }
 }
