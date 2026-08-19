@@ -11,13 +11,13 @@
 "orientation": "any",
 "icons": [
     {
-        "src": "/logo/ovulate-circle.png",
+        "src": "/logos/ovulate-circle.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "maskable"
     },
     {
-        "src": "/logo/ovulate-square.png",
+        "src": "/logos/ovulate-square.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
@@ -73,36 +73,36 @@
 "prefer_related_applications": false,
 "shortcuts": [
     {
-      "name": "Exam for Professional",
-      "url": "/exam/professional",
-      "description": "URL for Exam for Professional.",
+      "name": "Log Cycle",
+      "url": "/#add-cycle",
+      "description": "Log a new menstrual cycle.",
       "icons": [{
         "src": "/icons/favicon-96x96.png",
         "sizes": "96x96"
       }]
     },
     {
-      "name": "Exam for Sub-Professional",
-      "url": "/exam/subprofessional",
-      "description": "URL for Exam for Sub-Professional.",
+      "name": "Calendar View",
+      "url": "/#calendar",
+      "description": "View menstrual cycle calendar.",
       "icons": [{
         "src": "/icons/favicon-96x96.png",
         "sizes": "96x96"
       }]
     },
     {
-      "name": "Practice Exam",
-      "url": "/exam/practice",
-      "description": "URL for Practice.",
+      "name": "Predictions",
+      "url": "/#predictions",
+      "description": "View fertility and period predictions.",
       "icons": [{
         "src": "/icons/favicon-96x96.png",
         "sizes": "96x96"
       }]
     },
     {
-      "name": "Result Page",
-      "url": "/results",
-      "description": "URL for Result Page.",
+      "name": "Cycle History",
+      "url": "/#history",
+      "description": "View past menstrual cycle history.",
       "icons": [{
         "src": "/icons/favicon-96x96.png",
         "sizes": "96x96"

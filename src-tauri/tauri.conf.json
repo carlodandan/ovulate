@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
 
-  "productName": "ovulate",
+  "productName": "Ovulate",
   "version": "0.1.0",
   "identifier": "com.ovulate.app",
 
@@ -13,8 +13,17 @@
   },
 
   "app": {
+    "windows": [
+      {
+        "title": "Ovulate",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost http://localhost:* tauri: https://*.tauri.localhost https://mexbkgjvqqpydynjvkke.supabase.co https://*.supabase.co"
+      "csp": "default-src 'self'; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost http://localhost:* tauri: https://*.tauri.localhost"
     }
   },
 
@@ -27,9 +36,9 @@
     "copyright": "Copyright © Carlo Dandan",
     "category": "Productivity",
 
-    "shortDescription": "Interactive tracker for Period, Ovulation and Fertility.",
+    "shortDescription": "Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window.",
 
-    "longDescription": "Interactive tracker for Period, Ovulation and Fertility. However, this is for educational purposes only and should not be used as a medical device. Please consult your doctor for any medical concerns.",
+    "longDescription": "Desktop application for Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window. However, this is for educational purposes only and should not be used as a medical device. Please consult your doctor for any medical concerns.",
 
     "icon": [
       "icons/32x32.png",
