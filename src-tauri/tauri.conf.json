@@ -1,6 +1,6 @@
 {
   "productName": "Ovulate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "com.ovulate.app",
 
   "build": {
@@ -40,7 +40,7 @@
 
     "shortDescription": "Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window.",
 
-    "longDescription": "Desktop application for Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window. However, this is for educational purposes only and should not be used as a medical device. Please consult your doctor for any medical concerns.",
+    "longDescription": "Desktop and Android application for Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window. However, this is for educational purposes only and should not be used as a medical device. Please consult your doctor for any medical concerns.",
 
     "icon": [
       "icons/32x32.png",

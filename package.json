@@ -1,13 +1,21 @@
 {
   "name": "ovulate",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+    "author": {
+    "name": "Carlo Dandan",
+    "email": "carlodandan.personal@proton.me"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carlodandan/ovulate"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
