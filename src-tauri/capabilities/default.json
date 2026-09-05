@@ -1,12 +1,27 @@
-{
-  "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "default",
-  "description": "enables the default permissions",
-  "windows": [
-    "main"
-  ],
-  "permissions": [
-    "core:default",
-    "updater:default"
-  ]
-}
+[
+  {
+    "identifier": "default",
+    "description": "enables default permissions across all platforms",
+    "windows": [
+      "main"
+    ],
+    "permissions": [
+      "core:default"
+    ]
+  },
+  {
+    "identifier": "desktop-updater",
+    "description": "enables auto-updater on desktop platforms only",
+    "windows": [
+      "main"
+    ],
+    "platforms": [
+      "macOS",
+      "windows",
+      "linux"
+    ],
+    "permissions": [
+      "updater:default"
+    ]
+  }
+]

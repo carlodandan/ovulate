@@ -35,7 +35,7 @@ const Header = ({ cycles = [], onClearAllData }) => {
           <div className="flex items-center gap-3.5">
             <div className="relative p-2.5 bg-white/95 rounded-2xl shadow-md ring-1 ring-black/5 flex items-center justify-center shrink-0">
               <img
-                src="/logos/ovulate@512x512-nobg.png"
+                src="/logos/ovulate-circle.png"
                 alt="Ovulate Logo"
                 className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover"
                 onError={(e) => {

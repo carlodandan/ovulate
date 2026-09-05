@@ -1,14 +1,4 @@
 {
-  "app": {
-    "windows": [
-      {
-        "label": "main",
-        "title": "Ovulate",
-        "fullscreen": false
-      }
-    ]
-  },
-
   "bundle": {
     "targets": ["aab", "apk"],
 

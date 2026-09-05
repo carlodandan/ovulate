@@ -373,43 +373,43 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between sm:justify-end gap-2.5">
+        <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2">
           {hasData && (
             <button
               type="button"
               onClick={() => setShowSafetyOverlay(!showSafetyOverlay)}
-              className={`cursor-pointer px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-200 inline-flex items-center gap-1.5 ${
+              className={`cursor-pointer min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 inline-flex items-center gap-1.5 touch-manipulation active:scale-95 ${
                 showSafetyOverlay 
                   ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
               }`}
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
               <span>Safe Windows: {showSafetyOverlay ? 'ON' : 'OFF'}</span>
             </button>
           )}
 
-          {/* Month Switcher */}
-          <div className="inline-flex items-center bg-gray-50 border border-gray-200 rounded-xl p-0.5">
+          {/* Month Switcher with 44px+ touch targets */}
+          <div className="inline-flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1">
             <button
               type="button"
               onClick={previousMonth}
-              className="cursor-pointer p-1.5 hover:bg-white hover:shadow-xs rounded-lg text-gray-600 hover:text-gray-900 transition-all focus:outline-none"
+              className="cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center p-2 hover:bg-white hover:shadow-xs active:scale-90 rounded-lg text-gray-700 hover:text-gray-900 transition-all focus:outline-none touch-manipulation"
               aria-label="Previous month"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <span className="text-xs sm:text-sm font-semibold text-gray-800 min-w-[110px] text-center px-1">
+            <span className="text-xs sm:text-sm font-semibold text-gray-800 min-w-[105px] text-center px-1">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </span>
             <button
               type="button"
               onClick={nextMonth}
-              className="cursor-pointer p-1.5 hover:bg-white hover:shadow-xs rounded-lg text-gray-600 hover:text-gray-900 transition-all focus:outline-none"
+              className="cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center p-2 hover:bg-white hover:shadow-xs active:scale-90 rounded-lg text-gray-700 hover:text-gray-900 transition-all focus:outline-none touch-manipulation"
               aria-label="Next month"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -504,8 +504,8 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
             <div
               key={index}
               className={`
-                aspect-square min-h-[2.75rem] sm:min-h-22 p-1 sm:p-1.5 rounded-xl relative transition-all duration-150 border
-                ${date ? 'cursor-pointer hover:scale-[1.02] hover:shadow-sm' : 'bg-gray-50/40 border-transparent pointer-events-none'}
+                aspect-square min-h-[2.85rem] sm:min-h-22 p-1 sm:p-1.5 rounded-xl relative transition-all duration-150 border touch-manipulation
+                ${date ? 'cursor-pointer hover:scale-[1.02] hover:shadow-sm active:scale-[0.96]' : 'bg-gray-50/40 border-transparent pointer-events-none'}
                 ${date && !isSelected && 'bg-white border-gray-100'}
                 ${isSelected ? 'ring-2 ring-rose-600 shadow-md border-transparent z-10 scale-[1.03] bg-white' : ''}
                 
@@ -561,22 +561,47 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
           className="mt-6 p-4 sm:p-5 rounded-2xl border border-rose-100 bg-gradient-to-br from-white to-pink-50/40 shadow-xs animate-fadeIn"
         >
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-3 pb-3 border-b border-rose-100/60">
-            <div>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-rose-500">Selected Date</span>
-              <h4 className="font-extrabold text-gray-900 text-base font-heading">
-                {formatSelectedDate(selectedDate)}
-              </h4>
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-rose-500">Selected Date</span>
+                <h4 className="font-extrabold text-gray-900 text-base font-heading">
+                  {formatSelectedDate(selectedDate)}
+                </h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => onSelectDate(null)}
+                className="cursor-pointer sm:hidden min-w-[40px] min-h-[40px] flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-rose-50 active:scale-90 touch-manipulation"
+                aria-label="Deselect date"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
             
-            {cycles.length > 0 && currentDaySafety ? (
-              <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${currentDaySafety.badgeClass}`}>
-                {currentDaySafety.label} ({currentDaySafety.risk})
-              </span>
-            ) : (
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 self-start sm:self-center">
-                Standard Phase
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {cycles.length > 0 && currentDaySafety ? (
+                <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${currentDaySafety.badgeClass}`}>
+                  {currentDaySafety.label} ({currentDaySafety.risk})
+                </span>
+              ) : (
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 self-start sm:self-center">
+                  Standard Phase
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => onSelectDate(null)}
+                className="cursor-pointer hidden sm:flex min-w-[32px] min-h-[32px] items-center justify-center p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-rose-50 transition-colors"
+                title="Deselect date"
+                aria-label="Deselect date"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {cycles.length === 0 ? (

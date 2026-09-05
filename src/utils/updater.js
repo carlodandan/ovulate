@@ -8,6 +8,12 @@ import { check } from '@tauri-apps/plugin-updater';
  * @returns {Promise<{available: boolean, currentVersion?: string, newVersion?: string, body?: string, date?: string, update?: any, error?: any}>}
  */
 export async function checkForAppUpdates({ autoInstall = false, onProgress } = {}) {
+  // The updater plugin is desktop-only (Windows/macOS/Linux).
+  // Safe exit on web or mobile platforms (Android/iOS).
+  if (typeof window === 'undefined' || !window.__TAURI_INTERNALS__) {
+    return { available: false };
+  }
+
   try {
     const update = await check();
     if (!update) {
