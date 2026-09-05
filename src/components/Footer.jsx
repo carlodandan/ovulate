@@ -4,75 +4,82 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-12 pt-8 pb-6 border-t border-gray-200 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Company/App Info */}
+    <footer className="mt-14 pt-10 pb-8 border-t border-rose-100/80 bg-white/70 backdrop-blur-md rounded-3xl mb-6 px-6 sm:px-10 shadow-2xs">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-gray-100">
+          {/* App Info */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-purple-700 mb-3">🌸 Ovulate - Menstrual Cycle Tracker</h3>
-            <p className="text-gray-600 text-sm">
-              A privacy-focused period and ovulation calendar that helps you track your menstrual cycles.
+            <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-100">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="text-base font-bold text-gray-900 font-heading">
+                Ovulate
+              </h3>
+            </div>
+            <p className="text-gray-500 text-xs leading-relaxed max-w-sm">
+              Privacy-first menstrual cycle and fertility intelligence designed to assist tracking without surveillance.
             </p>
-            <div className="mt-4 flex flex-col space-y-2 text-xs text-gray-500">
-              <span>Version 1.0.0</span>
-              <span>Built with React + Tailwind CSS</span>
+            <div className="mt-3 inline-flex items-center gap-2 text-[11px] text-gray-400 font-medium">
+              <span>v1.0.0</span>
+              <span>•</span>
+              <span>React & Tailwind CSS</span>
             </div>
           </div>
 
-          {/* Important Disclaimers */}
-          <div className="text-center">
-            <h4 className="font-medium text-gray-700 mb-3">⚠️ Important Information</h4>
-            <div className="space-y-2 text-sm text-gray-600">
+          {/* Clinical Disclaimers */}
+          <div className="text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-1.5 mb-3 text-gray-900 font-bold text-xs uppercase tracking-wider">
+              <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Clinical Disclaimer</span>
+            </div>
+            <div className="space-y-1.5 text-xs text-gray-500 leading-relaxed">
               <p>
-                This tool provides <strong>predictions only</strong> and is not a medical device.
+                Provides statistical predictions only. Not a medical device or certified contraception method.
               </p>
-              <p>
-                Predictions are based on standard cycle calculations and may not be accurate for everyone.
-              </p>
-              <p className="text-xs italic">
-                Consult a healthcare professional for medical advice.
+              <p className="text-[11px] text-gray-400 italic">
+                Always consult an OB-GYN or clinician for medical advice or diagnostic evaluation.
               </p>
             </div>
           </div>
 
-          {/* Data & Privacy */}
-          <div className="text-center md:text-right">
-            <h4 className="font-medium text-gray-700 mb-3">🔒 Privacy & Data</h4>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p className="flex items-center justify-center md:justify-end">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                All data stored locally in your browser
+          {/* Privacy & Data */}
+          <div className="text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-1.5 mb-3 text-gray-900 font-bold text-xs uppercase tracking-wider">
+              <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>Zero-Tracking Privacy</span>
+            </div>
+            <div className="space-y-1.5 text-xs text-gray-600">
+              <p className="flex items-center justify-center md:justify-start gap-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                <span>100% stored in browser local storage</span>
               </p>
-              <p className="flex items-center justify-center md:justify-end">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                No account registration required
+              <p className="flex items-center justify-center md:justify-start gap-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                <span>No user account or credentials needed</span>
               </p>
-              <p className="flex items-center justify-center md:justify-end">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                No data sent to external servers
+              <p className="flex items-center justify-center md:justify-start gap-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                <span>No analytics or external server telemetry</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Separator */}
-        <div className="my-6 border-t border-gray-200"></div>
-
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-xs text-gray-500">
-            <p>
-              © {currentYear} Ovulate - Menstrual Cycle Tracker. All rights reserved.
-            </p>
-            <p className="mt-1">
-              This application is for informational purposes only.
-            </p>
-          </div>
+        <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+          <p>© {currentYear} Ovulate. Free & open-source health intelligence.</p>
 
-          <div className="flex items-center space-x-4 text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-4">
             <a 
-              href="#" 
-              className="hover:text-purple-600 transition-colors"
+              href="#policy" 
+              className="hover:text-rose-600 transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 alert('Data is stored in your browser\'s local storage. Clear browser data to remove all records.');
@@ -82,8 +89,8 @@ const Footer = () => {
             </a>
             <span>•</span>
             <a 
-              href="#" 
-              className="hover:text-purple-600 transition-colors"
+              href="#calculations" 
+              className="hover:text-rose-600 transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 alert('Calculations: Next Period = Last Start + Cycle Length\nOvulation = Next Period - Luteal Phase\nFertile Window = Ovulation ± 5 days');
@@ -93,24 +100,16 @@ const Footer = () => {
             </a>
             <span>•</span>
             <a 
-              href="#" 
-              className="hover:text-purple-600 transition-colors"
+              href="#delete" 
+              className="hover:text-rose-600 transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 alert('Clear browser data or use individual delete buttons to remove cycle records.');
               }}
             >
-              Delete Data
+              Data Retention
             </a>
           </div>
-        </div>
-
-        {/* Final Disclaimer */}
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500 text-center italic">
-            Menstrual cycles vary from person to person. Tracking your own patterns over several months will improve prediction accuracy. 
-            The app uses standard medical calculations: Ovulation typically occurs 14 days before the next period for a 28-day cycle.
-          </p>
         </div>
       </div>
     </footer>

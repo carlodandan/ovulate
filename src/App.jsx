@@ -35,29 +35,40 @@ function App() {
   };
 
   const deleteCycle = (id) => {
-    setCycles(cycles.filter(cycle => cycle.id !== id));
+    const updated = cycles.filter(cycle => cycle.id !== id);
+    setCycles(updated);
+    if (updated.length === 0) {
+      localStorage.removeItem('menstrualCycles');
+    }
   };
 
   const clearAllData = () => {
-    localStorage.removeItem('menstrualCycles');
-    setCycles([]);
-    alert('All data has been cleared successfully.');
+    if (window.confirm('Are you sure you want to clear all cycle records? This cannot be undone.')) {
+      localStorage.removeItem('menstrualCycles');
+      setCycles([]);
+      setSelectedDate(null);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
-      <div className="max-w-6xl mx-auto p-4 md:p-8">
-        {/* Use the new Header component */}
+    <div className="min-h-screen bg-[#FAF7F9] text-gray-900 relative selection:bg-rose-100 selection:text-rose-900">
+      {/* Subtle ambient lighting glows */}
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-rose-200/25 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 sm:py-8 md:py-10">
+        {/* Header */}
         <Header cycles={cycles} onClearAllData={clearAllData} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-6 md:space-y-8">
-            <div id="add-cycle" className="bg-white rounded-2xl shadow-lg p-4">
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
+          {/* Left Column (Logging, Calendar, History) */}
+          <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+            <div id="add-cycle" className="bg-white rounded-3xl shadow-xs hover:shadow-sm border border-rose-100/70 p-5 sm:p-7 transition-all duration-200">
               <CycleForm onAddCycle={addCycle} />
             </div>
 
-            <div id="calendar" className="bg-white rounded-2xl shadow-lg p-4">
+            <div id="calendar" className="bg-white rounded-3xl shadow-xs hover:shadow-sm border border-rose-100/70 p-5 sm:p-7 transition-all duration-200">
               <CalendarView 
                 cycles={cycles}
                 selectedDate={selectedDate}
@@ -66,17 +77,17 @@ function App() {
             </div>
 
             {cycles.length > 0 && (
-              <div id="history" className="bg-white rounded-2xl shadow-lg p-4">
+              <div id="history" className="bg-white rounded-3xl shadow-xs hover:shadow-sm border border-rose-100/70 p-5 sm:p-7 transition-all duration-200">
                 <CycleHistory cycles={cycles} onDeleteCycle={deleteCycle} />
               </div>
             )}
           </div>
 
-          {/* Right Column - Predictions */}
+          {/* Right Column - Sticky Predictions Sidebar */}
           <div className="lg:col-span-1">
             <div 
               id="predictions" 
-              className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-lg p-6 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto custom-scrollbar"
+              className="bg-white rounded-3xl shadow-xs border border-rose-100/80 p-5 sm:p-6 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto custom-scrollbar"
             >
               <Predictions cycles={cycles} />
             </div>

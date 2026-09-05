@@ -5,7 +5,7 @@ import {
   calculateFertileWindow
 } from '../../utils/cycleCalculations';
 
-const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
+const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [daysInMonth, setDaysInMonth] = useState([]);
   const [showSafetyOverlay, setShowSafetyOverlay] = useState(false);
@@ -119,9 +119,6 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     const dTime = d.getTime();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const isPastDate = d < today;
 
     // 1. Check against recorded cycles (past)
     for (const cycle of cycles) {
@@ -156,10 +153,10 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
             label: 'Menstruation Phase',
             risk: 'Low Conception Risk',
             riskLevel: 'low-menstruation',
-            description: 'This is the active bleeding phase. Biologically, pregnancy risk is very low during your period. However, it is not absolutely zero, especially for women with very short cycles or longer-lived sperm.',
-            colorClass: 'bg-rose-50 border-rose-300 text-rose-800',
-            indicatorColor: 'bg-rose-500',
-            icon: '🩸'
+            description: 'Active bleeding phase. Pregnancy probability is biologically very low during menstruation, though not absolutely zero for short cycles.',
+            colorClass: 'bg-rose-50/90 border-rose-200 text-rose-900',
+            dotColor: 'bg-rose-500',
+            badgeClass: 'bg-rose-100 text-rose-800 border-rose-200'
           };
         }
         
@@ -167,13 +164,13 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
         if (dTime >= fertile.start.getTime() && dTime <= fertile.end.getTime()) {
           return {
             type: 'unsafe',
-            label: 'Unsafe Period (Fertile Window)',
+            label: 'Fertile Window (Unsafe Period)',
             risk: 'High Conception Risk',
             riskLevel: 'high',
-            description: 'This is the fertile window surrounding ovulation. Sperm can survive inside the female body for up to 5 days, and the egg remains viable for up to 24 hours. Unprotected sex during this period has a high probability of resulting in pregnancy.',
-            colorClass: 'bg-amber-50 border-amber-400 text-amber-900 ring-2 ring-amber-200/50',
-            indicatorColor: 'bg-amber-500',
-            icon: '⚡'
+            description: 'Fertile window surrounding ovulation. Sperm can survive up to 5 days and the egg remains viable for 24 hours. Unprotected intercourse has a high likelihood of resulting in pregnancy.',
+            colorClass: 'bg-amber-50/90 border-amber-300 text-amber-900 ring-1 ring-amber-300/40',
+            dotColor: 'bg-amber-500',
+            badgeClass: 'bg-amber-100 text-amber-900 border-amber-300'
           };
         }
 
@@ -181,13 +178,13 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
         if (dTime > periodEnd.getTime() && dTime < fertile.start.getTime()) {
           return {
             type: 'early-safe',
-            label: 'Early Safe Period (Pre-Ovulatory)',
+            label: 'Early Safe Phase (Pre-Ovulatory)',
             risk: 'Low Conception Risk',
             riskLevel: 'low-caution',
-            description: 'This post-menstrual phase is generally a safe window. However, caution is advised: natural variations in cycle lengths or early ovulation can cause this window to shrink unexpectedly.',
-            colorClass: 'bg-teal-50 border-teal-300 text-teal-900',
-            indicatorColor: 'bg-teal-500',
-            icon: '🛡️'
+            description: 'Post-menstrual phase is generally low risk. However, natural fluctuations or early ovulation can unpredictably narrow this window.',
+            colorClass: 'bg-teal-50/90 border-teal-200 text-teal-950',
+            dotColor: 'bg-teal-500',
+            badgeClass: 'bg-teal-100 text-teal-800 border-teal-200'
           };
         }
 
@@ -195,13 +192,13 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
         if (dTime > fertile.end.getTime() && dTime < nextPeriodStart.getTime()) {
           return {
             type: 'late-safe',
-            label: 'Late Safe Period (Post-Ovulatory)',
+            label: 'Late Safe Phase (Post-Ovulatory)',
             risk: 'Very Low Conception Risk',
             riskLevel: 'very-low',
-            description: 'This is the most reliable safe window of your cycle. Ovulation has already occurred, and the egg has dissolved (it only lives for 12–24 hours). Conception is extremely unlikely.',
-            colorClass: 'bg-emerald-50 border-emerald-400 text-emerald-950 ring-2 ring-emerald-200/50',
-            indicatorColor: 'bg-emerald-600',
-            icon: '🛡️✨'
+            description: 'Most reliable physiological safe window. Ovulation has passed and the egg has dissolved (viable for 12–24 hours). Conception is biologically highly improbable.',
+            colorClass: 'bg-emerald-50/90 border-emerald-300 text-emerald-950 ring-1 ring-emerald-300/40',
+            dotColor: 'bg-emerald-600',
+            badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300'
           };
         }
       }
@@ -212,7 +209,6 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
       for (const prediction of futurePredictions) {
         const start = prediction.period.start;
         const periodEnd = prediction.period.end;
-        const ovulationDate = prediction.ovulation;
         const fertile = prediction.fertile;
         
         const nextPeriodStart = new Date(start);
@@ -227,10 +223,10 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
               label: 'Predicted Menstruation',
               risk: 'Low Conception Risk',
               riskLevel: 'low-menstruation',
-              description: 'Predicted active period. Biologically, conception is highly unlikely, but not impossible under rare circumstances (like short/irregular cycles).',
-              colorClass: 'bg-rose-50/70 border-rose-300 border-dashed text-rose-800',
-              indicatorColor: 'bg-rose-300',
-              icon: '🩸'
+              description: 'Projected menstrual bleeding phase based on previous cycle patterns.',
+              colorClass: 'bg-rose-50/60 border-rose-200 border-dashed text-rose-900',
+              dotColor: 'bg-rose-400',
+              badgeClass: 'bg-rose-50 text-rose-800 border-rose-200'
             };
           }
           
@@ -241,10 +237,10 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
               label: 'Predicted Unsafe Period (Fertile Window)',
               risk: 'High Conception Risk',
               riskLevel: 'high',
-              description: 'Predicted fertile window. Highly unsafe for unprotected intercourse if pregnancy is not desired, as ovulation is anticipated soon or active.',
-              colorClass: 'bg-amber-100/70 border-amber-400 border-dashed text-amber-900 ring-2 ring-amber-200/30',
-              indicatorColor: 'bg-amber-400',
-              icon: '⚡'
+              description: 'Predicted fertile window. Unsafe for unprotected intercourse if pregnancy is not desired.',
+              colorClass: 'bg-amber-50/60 border-amber-300 border-dashed text-amber-950',
+              dotColor: 'bg-amber-400',
+              badgeClass: 'bg-amber-100 text-amber-900 border-amber-300'
             };
           }
 
@@ -252,13 +248,13 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
           if (dTime > periodEnd.getTime() && dTime < fertile.start.getTime()) {
             return {
               type: 'predicted-early-safe',
-              label: 'Predicted Early Safe Period',
+              label: 'Predicted Early Safe Phase',
               risk: 'Low Conception Risk',
               riskLevel: 'low-caution',
-              description: 'Predicted pre-ovulatory safe phase. Lower risk, but standard calendar predictions are susceptible to stress or cycle changes shifting ovulation earlier.',
-              colorClass: 'bg-teal-50/70 border-teal-300 border-dashed text-teal-900',
-              indicatorColor: 'bg-teal-300',
-              icon: '🛡️'
+              description: 'Projected pre-ovulatory safe days. Moderate reliability due to cycle variability.',
+              colorClass: 'bg-teal-50/60 border-teal-200 border-dashed text-teal-950',
+              dotColor: 'bg-teal-400',
+              badgeClass: 'bg-teal-50 text-teal-800 border-teal-200'
             };
           }
 
@@ -266,13 +262,13 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
           if (dTime > fertile.end.getTime() && dTime < nextPeriodStart.getTime()) {
             return {
               type: 'predicted-late-safe',
-              label: 'Predicted Late Safe Period',
+              label: 'Predicted Late Safe Phase',
               risk: 'Very Low Conception Risk',
               riskLevel: 'very-low',
-              description: 'Predicted post-ovulatory safe window. This is highly reliable because the egg has dissolved, meaning fertilization is not biologically possible.',
-              colorClass: 'bg-emerald-50/70 border-emerald-400 border-dashed text-emerald-950 ring-2 ring-emerald-200/30',
-              indicatorColor: 'bg-emerald-400',
-              icon: '🛡️✨'
+              description: 'Projected post-ovulatory safe window. Highest physiological reliability.',
+              colorClass: 'bg-emerald-50/60 border-emerald-300 border-dashed text-emerald-950',
+              dotColor: 'bg-emerald-500',
+              badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300'
             };
           }
         }
@@ -295,18 +291,16 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  // Fixed day headers with unique keys
   const dayHeaders = [
-    { key: 'sun', label: 'S' },
-    { key: 'mon', label: 'M' },
-    { key: 'tue', label: 'T' },
-    { key: 'wed', label: 'W' },
-    { key: 'thu', label: 'T' },
-    { key: 'fri', label: 'F' },
-    { key: 'sat', label: 'S' }
+    { key: 'sun', label: 'Sun' },
+    { key: 'mon', label: 'Mon' },
+    { key: 'tue', label: 'Tue' },
+    { key: 'wed', label: 'Wed' },
+    { key: 'thu', label: 'Thu' },
+    { key: 'fri', label: 'Fri' },
+    { key: 'sat', label: 'Sat' }
   ];
 
-  // Get current month's recorded and predicted periods
   const getCurrentMonthStats = () => {
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
@@ -330,21 +324,20 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
 
   const monthStats = getCurrentMonthStats();
 
-  // Mobile-optimized day indicators
   const getDayIndicator = (dayType) => {
     switch(dayType) {
       case 'period':
-        return <div className="w-2 h-2 bg-red-500 rounded-full"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-500 rounded-full shadow-2xs" />;
       case 'predicted-period':
-        return <div className="w-2 h-2 bg-red-300 rounded-full border border-red-400"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-300 rounded-full border border-rose-400" />;
       case 'ovulation':
-        return <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full shadow-2xs" />;
       case 'predicted-ovulation':
-        return <div className="w-2 h-2 bg-yellow-300 rounded-full border border-yellow-400"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-300 rounded-full border border-amber-400" />;
       case 'fertile':
-        return <div className="w-2 h-2 bg-green-400 rounded-full"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full shadow-2xs" />;
       case 'predicted-fertile':
-        return <div className="w-2 h-2 bg-green-300 rounded-full border border-green-400"></div>;
+        return <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-300 rounded-full border border-emerald-400" />;
       default:
         return null;
     }
@@ -364,140 +357,139 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3">
-        <div className="flex items-center space-x-3">
-          <h2 className="text-xl font-semibold text-purple-700">Calendar</h2>
+      {/* Calendar Header with Month Navigation and Overlay Pill */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-5 gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center border border-purple-100">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 font-heading tracking-tight">
+              Cycle Calendar
+            </h2>
+            <p className="text-xs text-gray-500">Visual overview of phases & fertility window</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between sm:justify-end gap-2.5">
           {hasData && (
             <button
+              type="button"
               onClick={() => setShowSafetyOverlay(!showSafetyOverlay)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-300 flex items-center gap-1 ${
+              className={`cursor-pointer px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-200 inline-flex items-center gap-1.5 ${
                 showSafetyOverlay 
-                  ? 'bg-emerald-500 text-white border-emerald-400 shadow-sm' 
-                  : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
               }`}
             >
-              <span>🛡️ Safe periods: {showSafetyOverlay ? 'ON' : 'OFF'}</span>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>Safe Windows: {showSafetyOverlay ? 'ON' : 'OFF'}</span>
             </button>
           )}
-        </div>
-        
-        <div className="flex items-center justify-center space-x-4">
-          <button
-            onClick={previousMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Previous month"
-          >
-            <span className="text-lg">◀</span>
-          </button>
-          <span className="text-md font-medium min-w-[140px] text-center">
-            {monthNames[currentDate.getMonth()].substring(0, 3)} {currentDate.getFullYear()}
-          </span>
-          <button
-            onClick={nextMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Next month"
-          >
-            <span className="text-lg">▶</span>
-          </button>
+
+          {/* Month Switcher */}
+          <div className="inline-flex items-center bg-gray-50 border border-gray-200 rounded-xl p-0.5">
+            <button
+              type="button"
+              onClick={previousMonth}
+              className="cursor-pointer p-1.5 hover:bg-white hover:shadow-xs rounded-lg text-gray-600 hover:text-gray-900 transition-all focus:outline-none"
+              aria-label="Previous month"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-xs sm:text-sm font-semibold text-gray-800 min-w-[110px] text-center px-1">
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </span>
+            <button
+              type="button"
+              onClick={nextMonth}
+              className="cursor-pointer p-1.5 hover:bg-white hover:shadow-xs rounded-lg text-gray-600 hover:text-gray-900 transition-all focus:outline-none"
+              aria-label="Next month"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Legend Tab */}
-      <div className="mb-4 sm:mb-6">
+      {/* Legends */}
+      <div className="mb-4">
         {!showSafetyOverlay ? (
-          <>
-            <div className="hidden sm:flex flex-wrap gap-3 text-sm mb-2">
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-red-500 rounded mr-2"></div>
-                <span className="text-xs">Recorded Period</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-red-300 rounded mr-2 border border-red-400"></div>
-                <span className="text-xs">Predicted Period</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-yellow-400 rounded mr-2"></div>
-                <span className="text-xs">Ovulation</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-yellow-200 rounded mr-2 border border-yellow-300"></div>
-                <span className="text-xs">Predicted Ovulation</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-green-300 rounded mr-2"></div>
-                <span className="text-xs">Fertile Window</span>
-              </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-100 text-rose-900 font-medium">
+              <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+              <span>Period</span>
             </div>
-            
-            <div className="sm:hidden grid grid-cols-3 gap-2 text-xs">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-red-500 rounded mr-1"></div>
-                <span>Period</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-400 rounded mr-1"></div>
-                <span>Ovulation</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-400 rounded mr-1"></div>
-                <span>Fertile</span>
-              </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50/60 border border-rose-200 border-dashed text-rose-800 font-medium">
+              <span className="w-2 h-2 rounded-full bg-rose-300 border border-rose-400"></span>
+              <span>Predicted Period</span>
             </div>
-          </>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-medium">
+              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>Ovulation</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>Fertile Window</span>
+            </div>
+          </div>
         ) : (
-          <div className="bg-teal-50/50 p-2.5 rounded-lg border border-teal-100/50">
-            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
-              <span className="font-semibold text-teal-800 flex items-center">🛡️ Educational Safety Legend:</span>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-rose-50 border border-rose-300 rounded mr-1"></div>
-                <span className="text-rose-900 font-medium">Menstruation (Low Risk)</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-teal-50 border border-teal-300 rounded mr-1"></div>
-                <span className="text-teal-900 font-medium">Early Safe Phase (Low Risk)</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-emerald-50 border border-emerald-400 rounded mr-1"></div>
-                <span className="text-emerald-950 font-bold">Late Safe Phase (Very Low)</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-amber-50 border border-amber-400 rounded mr-1"></div>
-                <span className="text-amber-900 font-bold">Unsafe / Fertile (High Risk)</span>
-              </div>
+          <div className="p-2.5 rounded-xl bg-teal-50/70 border border-teal-100">
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="font-semibold text-teal-900 inline-flex items-center gap-1 mr-1">
+                <svg className="w-3.5 h-3.5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Safety Key:
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-rose-100 text-rose-900 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Menstruation (Low)
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-teal-100 text-teal-900 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Early Safe (Low)
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-950 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Late Safe (Very Low)
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Fertile (High Risk)
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Current Month Stats */}
+      {/* Month Stats Bar */}
       {(monthStats.recorded.length > 0 || monthStats.predicted.length > 0) && (
-        <div className="mb-4 p-3 bg-blue-50/70 rounded-lg border border-blue-100">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-            {monthStats.recorded.length > 0 && (
-              <div className="flex items-center">
-                <span className="text-blue-600 mr-2">📅</span>
-                <span className="text-xs sm:text-sm text-blue-700 font-medium">
-                  {monthStats.recorded.length} recorded cycle starts
-                </span>
-              </div>
-            )}
-            {monthStats.predicted.length > 0 && (
-              <div className="flex items-center">
-                <span className="text-pink-600 mr-2">🔮</span>
-                <span className="text-xs sm:text-sm text-pink-700 font-medium">
-                  {monthStats.predicted.length} predicted periods
-                </span>
-              </div>
-            )}
-          </div>
+        <div className="mb-4 px-3.5 py-2 bg-purple-50/60 rounded-xl border border-purple-100 flex flex-wrap items-center gap-3 text-xs text-purple-900 font-medium">
+          {monthStats.recorded.length > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+              {monthStats.recorded.length} recorded cycle start{monthStats.recorded.length > 1 ? 's' : ''}
+            </span>
+          )}
+          {monthStats.predicted.length > 0 && (
+            <span className="inline-flex items-center gap-1 text-pink-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
+              {monthStats.predicted.length} predicted cycle start{monthStats.predicted.length > 1 ? 's' : ''}
+            </span>
+          )}
         </div>
       )}
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
         {dayHeaders.map(({ key, label }) => (
-          <div key={key} className="text-center font-semibold text-gray-400 py-1 sm:py-2">
-            <span className="text-xs sm:text-sm">{label}</span>
+          <div key={key} className="text-center font-bold text-[11px] sm:text-xs text-gray-400 py-1.5">
+            <span>{label}</span>
           </div>
         ))}
 
@@ -506,53 +498,53 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
           const isToday = date?.toDateString() === new Date().toDateString();
           const isPastDate = date && date < new Date().setHours(0, 0, 0, 0);
           const isSelected = selectedDate && date && date.toDateString() === selectedDate.toDateString();
-
           const safetyInfo = showSafetyOverlay ? getDaySafetyInfo(date) : null;
           
           return (
             <div
               key={index}
               className={`
-                aspect-square min-h-[2.5rem] sm:min-h-24 
-                p-1 sm:p-2 border rounded-md sm:rounded-xl relative transition-all duration-200
-                ${date ? 'bg-white border-gray-100 hover:border-purple-300 hover:shadow-sm cursor-pointer' : 'bg-gray-50/60 border-gray-100'}
-                ${isSelected ? 'ring-2 ring-purple-600 shadow-md border-transparent scale-102 z-10' : ''}
+                aspect-square min-h-[2.75rem] sm:min-h-22 p-1 sm:p-1.5 rounded-xl relative transition-all duration-150 border
+                ${date ? 'cursor-pointer hover:scale-[1.02] hover:shadow-sm' : 'bg-gray-50/40 border-transparent pointer-events-none'}
+                ${date && !isSelected && 'bg-white border-gray-100'}
+                ${isSelected ? 'ring-2 ring-rose-600 shadow-md border-transparent z-10 scale-[1.03] bg-white' : ''}
                 
-                ${!showSafetyOverlay ? `
-                  ${dayType === 'period' ? 'bg-red-50 border-red-200' : ''}
-                  ${dayType === 'predicted-period' ? 'bg-red-50/70 border-red-300 border-dashed' : ''}
-                  ${dayType === 'ovulation' ? 'bg-yellow-50 border-yellow-200' : ''}
-                  ${dayType === 'predicted-ovulation' ? 'bg-yellow-50/70 border-yellow-300 border-dashed' : ''}
-                  ${dayType === 'fertile' ? 'bg-green-50 border-green-200' : ''}
-                  ${dayType === 'predicted-fertile' ? 'bg-green-50/70 border-green-300 border-dashed' : ''}
-                ` : `
-                  ${safetyInfo ? safetyInfo.colorClass : 'border-gray-100'}
-                `}
+                ${!showSafetyOverlay && date ? `
+                  ${dayType === 'period' ? '!bg-rose-50/90 !border-rose-200' : ''}
+                  ${dayType === 'predicted-period' ? '!bg-rose-50/50 !border-rose-300 border-dashed' : ''}
+                  ${dayType === 'ovulation' ? '!bg-amber-50/90 !border-amber-300 ring-1 ring-amber-200/50' : ''}
+                  ${dayType === 'predicted-ovulation' ? '!bg-amber-50/50 !border-amber-300 border-dashed' : ''}
+                  ${dayType === 'fertile' ? '!bg-emerald-50/80 !border-emerald-200' : ''}
+                  ${dayType === 'predicted-fertile' ? '!bg-emerald-50/40 !border-emerald-300 border-dashed' : ''}
+                ` : ''}
+
+                ${showSafetyOverlay && safetyInfo ? `${safetyInfo.colorClass}` : ''}
               `}
               onClick={() => date && onSelectDate(date)}
             >
               {date && (
                 <div className="flex flex-col h-full justify-between">
                   <div className="flex justify-between items-start">
-                    {/* Corner Phase Icon */}
-                    {showSafetyOverlay && safetyInfo?.icon && (
-                      <span className="text-[10px] sm:text-xs text-opacity-80">
-                        {safetyInfo.icon.split(' ')[0]}
-                      </span>
+                    {/* Overlay small indicator tag */}
+                    {showSafetyOverlay && safetyInfo ? (
+                      <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${safetyInfo.dotColor}`} />
+                    ) : (
+                      <span />
                     )}
                     
                     <span className={`
                       inline-flex items-center justify-center 
-                      w-5 h-5 sm:w-6 sm:h-6 rounded-full text-xs sm:text-sm font-medium ml-auto
-                      ${isToday ? 'bg-purple-600 text-white shadow-sm' : ''}
+                      w-5 h-5 sm:w-6 sm:h-6 rounded-lg text-xs font-semibold ml-auto transition-colors
+                      ${isToday ? 'bg-rose-600 text-white shadow-2xs font-bold' : ''}
                       ${!isToday && isPastDate ? 'text-gray-400' : 'text-gray-800'}
+                      ${isSelected && !isToday ? 'text-rose-700 font-extrabold' : ''}
                     `}>
                       {date.getDate()}
                     </span>
                   </div>
                   
                   {/* Phase Dot Indicator */}
-                  <div className="mt-auto flex justify-center">
+                  <div className="mt-auto flex justify-center pb-0.5">
                     {getDayIndicator(dayType)}
                   </div>
                 </div>
@@ -562,121 +554,99 @@ const CalendarView = ({ cycles, selectedDate, onSelectDate }) => {
         })}
       </div>
 
-      {/* Selected Day Details Card (Educational Concept Card) */}
+      {/* Selected Day Details Card */}
       {selectedDate && (
         <div 
           ref={detailsRef}
-          className="mt-6 p-4 rounded-xl border border-purple-100 bg-gradient-to-br from-white to-purple-50/30 shadow-sm animate-fadeIn"
+          className="mt-6 p-4 sm:p-5 rounded-2xl border border-rose-100 bg-gradient-to-br from-white to-pink-50/40 shadow-xs animate-fadeIn"
         >
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-3 pb-2 border-b border-purple-50">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-3 pb-3 border-b border-rose-100/60">
             <div>
-              <p className="text-xs text-gray-500 font-medium">SELECTED DATE</p>
-              <h4 className="font-semibold text-purple-900 text-sm sm:text-base">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-rose-500">Selected Date</span>
+              <h4 className="font-extrabold text-gray-900 text-base font-heading">
                 {formatSelectedDate(selectedDate)}
               </h4>
             </div>
             
-            {/* Risk Badge */}
             {cycles.length > 0 && currentDaySafety ? (
-              <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${
-                currentDaySafety.riskLevel === 'high'
-                  ? 'bg-amber-100 text-amber-800 border-amber-300'
-                  : currentDaySafety.riskLevel === 'very-low'
-                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                  : currentDaySafety.riskLevel === 'low-caution'
-                  ? 'bg-cyan-100 text-cyan-800 border-cyan-300'
-                  : 'bg-rose-100 text-rose-800 border-rose-300'
-              }`}>
-                {currentDaySafety.icon ? currentDaySafety.icon + ' ' : ''}{currentDaySafety.label} ({currentDaySafety.risk})
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${currentDaySafety.badgeClass}`}>
+                {currentDaySafety.label} ({currentDaySafety.risk})
               </span>
             ) : (
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200 self-start sm:self-center">
-                ℹ️ Standard Day
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 self-start sm:self-center">
+                Standard Phase
               </span>
             )}
           </div>
 
           {cycles.length === 0 ? (
             <p className="text-sm text-gray-600 leading-relaxed">
-              No menstrual cycle data recorded yet. Fill out the cycle form above to generate predictions and view your educational safety window breakdown.
+              No cycle data recorded yet. Use the form above to record your latest cycle and calculate your predictions.
             </p>
           ) : currentDaySafety ? (
             <div className="space-y-3">
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed font-medium">
                 {currentDaySafety.description}
               </p>
 
-              {/* Contraceptive warning details */}
-              <div className="bg-yellow-50/80 p-3 rounded-lg border border-yellow-200 text-[11px] sm:text-xs text-yellow-800 leading-normal flex items-start space-x-2">
-                <span className="text-base leading-none">⚠️</span>
+              {/* Contraceptive Notice Banner */}
+              <div className="bg-amber-50/80 p-3 rounded-xl border border-amber-200/80 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
+                <svg className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
                 <div>
-                  <strong className="block mb-0.5">Educational Purpose Only</strong>
-                  The calendar (rhythm) method is statistically unreliable for primary birth control. Individual cycles are subject to hormonal, stress-induced, or health variations that can shift ovulation unexpectedly. Always use barrier methods (such as condoms) or consult a clinician for robust pregnancy prevention.
+                  <strong className="font-semibold block text-amber-950 mb-0.5">Educational Guidance Only</strong>
+                  Calendar rhythm methods have high natural variation and are not considered primary contraception. Stress, diet, or travel can cause unpredictable ovulatory shifts. Use medically approved protection.
                 </div>
               </div>
             </div>
           ) : (
-            <div className="space-y-2">
-              <p className="text-sm text-gray-700 leading-relaxed">
-                This date falls outside of your currently active or predicted cycles.
-              </p>
-              <p className="text-xs text-gray-500">
-                Tip: Add your most recent menstrual cycle dates to see updated projections for this date range!
-              </p>
+            <div className="text-sm text-gray-600">
+              <p>This date falls outside of currently recorded or predicted active cycle ranges.</p>
             </div>
           )}
         </div>
       )}
 
-      {/* Predictions Info */}
+      {/* Predictions Mini Strip */}
       {hasData && futurePredictions.length > 0 && (
-        <div className="mt-6 p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg sm:rounded-xl border border-purple-100">
-          <div className="flex items-center mb-2">
-            <span className="text-purple-600 mr-2">🔮</span>
-            <h3 className="font-semibold text-purple-800 text-sm sm:text-base">
-              Future Predictions
+        <div className="mt-6 p-4 bg-gradient-to-r from-rose-50/60 to-purple-50/60 rounded-2xl border border-rose-100">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-4 h-4 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <h3 className="font-bold text-gray-900 text-xs sm:text-sm font-heading">
+              Upcoming Forecast
             </h3>
           </div>
           
-          <p className="text-xs sm:text-sm text-gray-600 mb-3">
-            Based on your last cycle, next {Math.min(3, futurePredictions.length)} months:
+          <p className="text-xs text-gray-500 mb-3">
+            Anticipated periods for the next {Math.min(3, futurePredictions.length)} cycle cycles:
           </p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             {futurePredictions.slice(0, 3).map((prediction, index) => {
               const monthName = prediction.period.start.toLocaleDateString('en-US', { month: 'short' });
               const year = prediction.period.start.getFullYear();
               return (
-                <div key={index} className="bg-white p-2 sm:p-3 rounded-lg border border-gray-200">
-                  <div className="flex justify-between items-start mb-1 sm:mb-2">
-                    <span className="font-medium text-gray-700 text-xs sm:text-sm">
-                      {monthName} {year}
-                    </span>
+                <div key={index} className="bg-white p-3 rounded-xl border border-gray-200/80 shadow-2xs">
+                  <div className="font-bold text-gray-900 text-xs mb-1.5">
+                    {monthName} {year}
                   </div>
-                  <div className="space-y-1 text-xs sm:text-sm">
-                    <div className="flex items-center">
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-300 rounded-full mr-1.5 sm:mr-2"></div>
-                      <span className="text-gray-600 truncate">
-                        Period: {prediction.period.start.getDate()}-{prediction.period.end.getDate()}
-                      </span>
+                  <div className="space-y-1 text-xs text-gray-600">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                      <span>Period: {prediction.period.start.getDate()}–{prediction.period.end.getDate()}</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-yellow-300 rounded-full mr-1.5 sm:mr-2"></div>
-                      <span className="text-gray-600">
-                        Ovulation: {prediction.ovulation.getDate()}
-                      </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span>Ovulation: {prediction.ovulation.getDate()}</span>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          
-          {futurePredictions.length > 3 && (
-            <p className="text-xs text-gray-500 mt-2 sm:mt-3 text-center">
-              + {futurePredictions.length - 3} more months predicted
-            </p>
-          )}
         </div>
       )}
     </div>
