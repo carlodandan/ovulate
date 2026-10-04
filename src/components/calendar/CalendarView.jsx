@@ -1,13 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useCyclePredictions } from '../../hooks/useCyclePredictions';
 import {
   calculateOvulationDate,
   calculateFertileWindow
 } from '../../utils/cycleCalculations';
+import { SYMPTOM_OPTIONS } from '../../utils/journalCalculations';
+import SymptomIcon from '../common/SymptomIcon';
 
-const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
+const CalendarView = ({
+  cycles = [],
+  selectedDate,
+  onSelectDate,
+  mode = 'standard',
+  dailyEntries = {},
+  onOpenEntryModal
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [daysInMonth, setDaysInMonth] = useState([]);
   const [showSafetyOverlay, setShowSafetyOverlay] = useState(false);
   
   const { hasData, futurePredictions, lastCycle } = useCyclePredictions(cycles);
@@ -20,11 +28,7 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
     }
   }, [selectedDate]);
 
-  useEffect(() => {
-    generateCalendar();
-  }, [currentDate]);
-
-  const generateCalendar = () => {
+  const daysInMonth = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     
@@ -44,8 +48,8 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
       daysInMonthArray.push(date);
     }
 
-    setDaysInMonth(daysInMonthArray);
-  };
+    return daysInMonthArray;
+  }, [currentDate]);
 
   const getDayType = (date) => {
     if (!date) return null;
@@ -353,6 +357,8 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
     });
   };
 
+  const selectedDateStr = selectedDate ? selectedDate.toISOString().split('T')[0] : null;
+  const selectedJournalEntry = selectedDateStr ? dailyEntries[selectedDateStr] : null;
   const currentDaySafety = selectedDate ? getDaySafetyInfo(selectedDate) : null;
 
   return (
@@ -366,10 +372,25 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
             </svg>
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 font-heading tracking-tight">
-              Cycle Calendar
-            </h2>
-            <p className="text-xs text-gray-500">Visual overview of phases & fertility window</p>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 font-heading tracking-tight">
+                Cycle Calendar
+              </h2>
+              {mode === 'journal' ? (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-200">
+                  Journal Mode
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 border border-gray-200">
+                  Standard Mode
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500">
+              {mode === 'journal'
+                ? 'Tap any day to view, log, or edit actual symptoms and bleeding'
+                : 'Visual overview of phases & fertility window'}
+            </p>
           </div>
         </div>
 
@@ -422,7 +443,30 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
 
       {/* Legends */}
       <div className="mb-4">
-        {!showSafetyOverlay ? (
+        {mode === 'journal' ? (
+          <div className="p-2.5 rounded-xl bg-purple-50/70 border border-purple-100 flex flex-wrap items-center gap-2.5 text-xs">
+            <span className="font-semibold text-purple-900 inline-flex items-center gap-1 mr-1">
+              <span className="w-2 h-2 rounded-full bg-purple-600" />
+              Journal Key:
+            </span>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-rose-100 text-rose-900 font-medium">
+              <span className="w-2 h-2 rounded-full bg-rose-600 shadow-2xs" />
+              <span>Actual Bleeding</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+              <span>Logged Symptoms</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-100 text-sky-900 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+              <span>Basal Temp (°BBT)</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              <span>Peak LH / Mucus</span>
+            </div>
+          </div>
+        ) : !showSafetyOverlay ? (
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-100 text-rose-900 font-medium">
               <span className="w-2 h-2 rounded-full bg-rose-500"></span>
@@ -494,22 +538,31 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
         ))}
 
         {daysInMonth.map((date, index) => {
+          const dateStr = date ? date.toISOString().split('T')[0] : null;
+          const journalEntry = dateStr ? dailyEntries[dateStr] : null;
           const dayType = getDayType(date);
           const isToday = date?.toDateString() === new Date().toDateString();
           const isPastDate = date && date < new Date().setHours(0, 0, 0, 0);
           const isSelected = selectedDate && date && date.toDateString() === selectedDate.toDateString();
           const safetyInfo = showSafetyOverlay ? getDaySafetyInfo(date) : null;
           
+          const hasActualFlow = journalEntry && journalEntry.flow && journalEntry.flow !== 'none';
+          const hasSymptoms = journalEntry && journalEntry.symptoms && journalEntry.symptoms.length > 0;
+          const hasTemp = journalEntry && journalEntry.temperature !== null && journalEntry.temperature !== undefined && journalEntry.temperature !== '';
+          const isPeakOrMucus = journalEntry && (journalEntry.ovulationTest === 'peak' || journalEntry.cervicalMucus === 'eggwhite');
+
           return (
             <div
               key={index}
               className={`
-                aspect-square min-h-[2.85rem] sm:min-h-22 p-1 sm:p-1.5 rounded-xl relative transition-all duration-150 border touch-manipulation
+                aspect-square min-h-[3rem] sm:min-h-24 p-1 sm:p-1.5 rounded-xl relative transition-all duration-150 border touch-manipulation
                 ${date ? 'cursor-pointer hover:scale-[1.02] hover:shadow-sm active:scale-[0.96]' : 'bg-gray-50/40 border-transparent pointer-events-none'}
                 ${date && !isSelected && 'bg-white border-gray-100'}
                 ${isSelected ? 'ring-2 ring-rose-600 shadow-md border-transparent z-10 scale-[1.03] bg-white' : ''}
                 
-                ${!showSafetyOverlay && date ? `
+                ${mode === 'journal' && hasActualFlow ? '!bg-rose-50/95 !border-rose-300 ring-1 ring-rose-200' : ''}
+
+                ${mode === 'standard' && !showSafetyOverlay && date ? `
                   ${dayType === 'period' ? '!bg-rose-50/90 !border-rose-200' : ''}
                   ${dayType === 'predicted-period' ? '!bg-rose-50/50 !border-rose-300 border-dashed' : ''}
                   ${dayType === 'ovulation' ? '!bg-amber-50/90 !border-amber-300 ring-1 ring-amber-200/50' : ''}
@@ -520,14 +573,20 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
 
                 ${showSafetyOverlay && safetyInfo ? `${safetyInfo.colorClass}` : ''}
               `}
-              onClick={() => date && onSelectDate(date)}
+              onClick={() => {
+                if (date) {
+                  onSelectDate(date);
+                }
+              }}
             >
               {date && (
                 <div className="flex flex-col h-full justify-between">
                   <div className="flex justify-between items-start">
-                    {/* Overlay small indicator tag */}
+                    {/* Overlay small indicator tag or journal flow badge */}
                     {showSafetyOverlay && safetyInfo ? (
                       <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${safetyInfo.dotColor}`} />
+                    ) : mode === 'journal' && hasActualFlow ? (
+                      <span className="w-2 h-2 rounded-full bg-rose-600 shadow-xs" title={`Flow: ${journalEntry.flow}`} />
                     ) : (
                       <span />
                     )}
@@ -543,10 +602,25 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
                     </span>
                   </div>
                   
-                  {/* Phase Dot Indicator */}
-                  <div className="mt-auto flex justify-center pb-0.5">
-                    {getDayIndicator(dayType)}
-                  </div>
+                  {/* Journal Micro-indicators or Standard Phase Dot Indicator */}
+                  {mode === 'journal' ? (
+                    <div className="mt-auto flex items-center justify-center gap-1 pb-0.5">
+                      {hasSymptoms && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500" title="Symptoms logged" />
+                      )}
+                      {hasTemp && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500" title={`Temp: ${journalEntry.temperature}°`} />
+                      )}
+                      {isPeakOrMucus && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" title="Peak LH or Fertile Mucus" />
+                      )}
+                      {!hasActualFlow && !hasSymptoms && !hasTemp && !isPeakOrMucus && getDayIndicator(dayType)}
+                    </div>
+                  ) : (
+                    <div className="mt-auto flex justify-center pb-0.5">
+                      {getDayIndicator(dayType)}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -580,20 +654,34 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
               </button>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {mode === 'journal' && (
+                <button
+                  type="button"
+                  onClick={() => onOpenEntryModal && onOpenEntryModal(selectedDate)}
+                  className="cursor-pointer min-h-[44px] px-4 py-2 rounded-xl text-xs font-bold bg-rose-700 hover:bg-rose-800 text-white shadow-xs active:scale-95 transition-all inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-rose-500/30"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span>{selectedJournalEntry ? 'Edit Day Journal' : '+ Log Day Journal'}</span>
+                </button>
+              )}
+
               {cycles.length > 0 && currentDaySafety ? (
-                <span className={`px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${currentDaySafety.badgeClass}`}>
+                <span className={`px-3 py-1.5 rounded-full text-xs font-bold border self-start sm:self-center shadow-2xs ${currentDaySafety.badgeClass}`}>
                   {currentDaySafety.label} ({currentDaySafety.risk})
                 </span>
               ) : (
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 self-start sm:self-center">
+                <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 self-start sm:self-center">
                   Standard Phase
                 </span>
               )}
+
               <button
                 type="button"
                 onClick={() => onSelectDate(null)}
-                className="cursor-pointer hidden sm:flex min-w-[32px] min-h-[32px] items-center justify-center p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-rose-50 transition-colors"
+                className="cursor-pointer hidden sm:flex min-w-[36px] min-h-[36px] items-center justify-center p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-rose-50 transition-colors"
                 title="Deselect date"
                 aria-label="Deselect date"
               >
@@ -604,12 +692,118 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
             </div>
           </div>
 
+          {/* Journal Mode: Display Actual Logged Data */}
+          {mode === 'journal' && (
+            <div className="mb-4 p-3.5 rounded-xl bg-white border border-rose-100/90 shadow-2xs space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Actual Logged Data
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  User Actual
+                </span>
+              </div>
+
+              {selectedJournalEntry ? (
+                <div className="space-y-2.5 text-xs">
+                  {/* Flow */}
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-500 w-24">Bleeding Flow:</span>
+                    <span className={`px-2 py-0.5 rounded-lg font-bold capitalize ${
+                      selectedJournalEntry.flow && selectedJournalEntry.flow !== 'none'
+                        ? 'bg-rose-100 text-rose-800'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {selectedJournalEntry.flow || 'None'}
+                    </span>
+                  </div>
+
+                  {/* Symptoms */}
+                  {selectedJournalEntry.symptoms && selectedJournalEntry.symptoms.length > 0 && (
+                    <div className="flex items-start gap-2">
+                      <span className="font-semibold text-gray-500 w-24 pt-1">Symptoms:</span>
+                      <div className="flex flex-wrap gap-1.5 flex-1">
+                        {selectedJournalEntry.symptoms.map(s => {
+                          const opt = SYMPTOM_OPTIONS.find(o => o.key === s);
+                          return (
+                            <span key={s} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-900 border border-purple-200/80 text-[11px] font-medium">
+                              <SymptomIcon type={s} className="w-3.5 h-3.5 text-purple-700 shrink-0" />
+                              <span>{opt?.label || s}</span>
+                            </span>
+                          );
+                        })}
+                        {selectedJournalEntry.otherSymptom && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-900 border border-purple-200/80 text-[11px] font-medium">
+                            <SymptomIcon type="other" className="w-3.5 h-3.5 text-purple-700 shrink-0" />
+                            <span>{selectedJournalEntry.otherSymptom}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Biomarkers Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-gray-100">
+                    {/* Cervical Mucus */}
+                    {selectedJournalEntry.cervicalMucus && (
+                      <div className="p-2 rounded-lg bg-teal-50/60 border border-teal-100">
+                        <span className="block text-[10px] text-teal-700 font-semibold uppercase">Mucus</span>
+                        <span className="font-bold text-teal-950 capitalize">{selectedJournalEntry.cervicalMucus}</span>
+                      </div>
+                    )}
+
+                    {/* BBT */}
+                    {selectedJournalEntry.temperature && (
+                      <div className="p-2 rounded-lg bg-sky-50/60 border border-sky-100">
+                        <span className="block text-[10px] text-sky-700 font-semibold uppercase">Basal Temp</span>
+                        <span className="font-extrabold text-sky-950">{selectedJournalEntry.temperature}°{selectedJournalEntry.tempUnit || 'C'}</span>
+                      </div>
+                    )}
+
+                    {/* LH Test */}
+                    {selectedJournalEntry.ovulationTest && (
+                      <div className="p-2 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <span className="block text-[10px] text-amber-700 font-semibold uppercase">LH Test</span>
+                        <span className="font-extrabold text-amber-950 capitalize">{selectedJournalEntry.ovulationTest}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Notes */}
+                  {selectedJournalEntry.notes && (
+                    <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
+                      <span className="block text-[10px] text-gray-500 font-bold uppercase mb-0.5">Notes:</span>
+                      <p className="text-gray-700 italic">{selectedJournalEntry.notes}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-xs text-gray-500 py-1 flex items-center justify-between">
+                  <span>No journal record logged for this day yet.</span>
+                  <button
+                    type="button"
+                    onClick={() => onOpenEntryModal && onOpenEntryModal(selectedDate)}
+                    className="text-rose-600 hover:text-rose-700 font-bold underline cursor-pointer"
+                  >
+                    + Record entry
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Forecast / Biological Guidance */}
           {cycles.length === 0 ? (
             <p className="text-sm text-gray-600 leading-relaxed">
               No cycle data recorded yet. Use the form above to record your latest cycle and calculate your predictions.
             </p>
           ) : currentDaySafety ? (
             <div className="space-y-3">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                <span>Algorithm Prediction:</span>
+              </div>
               <p className="text-sm text-gray-700 leading-relaxed font-medium">
                 {currentDaySafety.description}
               </p>
@@ -646,7 +840,7 @@ const CalendarView = ({ cycles = [], selectedDate, onSelectDate }) => {
           </div>
           
           <p className="text-xs text-gray-500 mb-3">
-            Anticipated periods for the next {Math.min(3, futurePredictions.length)} cycle cycles:
+            Anticipated periods for the next {Math.min(3, futurePredictions.length)} cycles:
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">

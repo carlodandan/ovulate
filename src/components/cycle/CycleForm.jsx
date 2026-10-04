@@ -144,7 +144,7 @@ const CycleForm = ({ onAddCycle }) => {
 
         <button
           type="submit"
-          className="cursor-pointer w-full mt-2 min-h-[48px] inline-flex items-center justify-center gap-2 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 hover:from-rose-700 hover:via-pink-700 hover:to-purple-700 text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-500/50"
+          className="cursor-pointer w-full mt-2 min-h-[48px] inline-flex items-center justify-center gap-2 bg-rose-700 hover:bg-rose-800 active:bg-rose-900 text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-xs active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-500/40"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5 13l4 4L19 7" />

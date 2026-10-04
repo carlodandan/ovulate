@@ -1,6 +1,6 @@
 import { useCyclePredictions } from '../../hooks/useCyclePredictions';
 
-const Predictions = ({ cycles = [] }) => {
+const Predictions = ({ cycles = [], actualStats = null, hasActualData = false }) => {
   const { 
     hasData, 
     currentPredictions, 
@@ -18,7 +18,7 @@ const Predictions = ({ cycles = [] }) => {
         </div>
         <h3 className="text-base font-bold text-gray-900 font-heading mb-1">No Cycle Data Yet</h3>
         <p className="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
-          Record your last period start date in the form to generate personal cycle forecasts and safe period breakdowns.
+          Record your period in the log form or daily journal to generate personal cycle forecasts and safe period breakdowns.
         </p>
       </div>
     );
@@ -71,12 +71,29 @@ const Predictions = ({ cycles = [] }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 pb-1 border-b border-purple-100/60">
-        <div className="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
-        <h2 className="text-lg font-bold text-gray-900 font-heading tracking-tight">
-          Cycle Forecast
-        </h2>
+      <div className="flex items-center justify-between pb-1 border-b border-purple-100/60">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+          <h2 className="text-lg font-bold text-gray-900 font-heading tracking-tight">
+            Cycle Forecast
+          </h2>
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+          Predicted
+        </span>
       </div>
+
+      {/* Actual Data Calibration Notice if available */}
+      {hasActualData && actualStats && (
+        <div className="p-2.5 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-xs text-emerald-950 flex items-start gap-2">
+          <svg className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="leading-snug">
+            <span className="font-bold">Actual Data Calibrated:</span> Model reflects your journal history (avg actual cycle: {actualStats.avgLength}d).
+          </div>
+        </div>
+      )}
       
       {/* Next Period Card */}
       <div className="bg-white p-4 rounded-2xl shadow-2xs border border-rose-100/80 relative overflow-hidden">
@@ -87,7 +104,10 @@ const Predictions = ({ cycles = [] }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
             </div>
-            <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Next Period</h3>
+            <div>
+              <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Next Period</h3>
+              <span className="text-[10px] text-gray-400 block -mt-0.5">Calculated prediction</span>
+            </div>
           </div>
           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${
             daysUntilPeriod === 0
@@ -118,7 +138,10 @@ const Predictions = ({ cycles = [] }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Fertile Window</h3>
+            <div>
+              <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Fertile Window</h3>
+              <span className="text-[10px] text-amber-700/80 block -mt-0.5">Calculated prediction</span>
+            </div>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300">
             High Risk
@@ -155,7 +178,10 @@ const Predictions = ({ cycles = [] }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Safe Windows</h3>
+            <div>
+              <h3 className="font-bold text-gray-900 text-xs uppercase tracking-wider">Safe Windows</h3>
+              <span className="text-[10px] text-teal-700/80 block -mt-0.5">Calculated prediction</span>
+            </div>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-teal-900 px-2 py-0.5 rounded-full border border-teal-300">
             Low Risk
@@ -230,7 +256,7 @@ const Predictions = ({ cycles = [] }) => {
             </p>
           </div>
           <div className="text-center p-2 bg-white rounded-xl border border-purple-100/80 shadow-2xs">
-            <p className="text-[10px] text-gray-500 font-semibold uppercase">Logged Cycles</p>
+            <p className="text-[10px] text-gray-500 font-semibold uppercase">Cycles Count</p>
             <p className="text-base font-extrabold text-purple-800">{cycles.length}</p>
           </div>
         </div>
