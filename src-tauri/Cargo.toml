@@ -1,6 +1,6 @@
 [package]
 name = "ovulate"
-version = "1.0.0"
+version = "2.0.0"
 description = "Tracking and Predicting Menstrual Cycle and Fertility/Ovulation window."
 authors = ["Carlo Dandan"]
 license = "MIT"
