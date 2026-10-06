@@ -1,4 +1,6 @@
-const Footer = () => {
+import { APP_VERSION } from '../constants/version';
+
+const Footer = ({ onShowSplash }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -20,10 +22,22 @@ const Footer = () => {
             <p className="text-gray-500 text-xs leading-relaxed max-w-sm">
               Privacy-first menstrual cycle and fertility intelligence designed to assist tracking without surveillance.
             </p>
-            <div className="mt-3 inline-flex items-center gap-2 text-[11px] text-gray-400 font-medium">
-              <span>v1.0.0</span>
+            <div className="mt-3 flex items-center justify-center md:justify-start gap-2 text-[11px] text-gray-400 font-medium">
+              <span>v{APP_VERSION}</span>
               <span>•</span>
-              <span>React & Tailwind CSS</span>
+              <span>Private & Offline</span>
+              {onShowSplash && (
+                <>
+                  <span>•</span>
+                  <button
+                    type="button"
+                    onClick={onShowSplash}
+                    className="cursor-pointer text-rose-700 hover:text-rose-950 font-semibold underline underline-offset-2 transition-colors focus:outline-none focus:ring-1 focus:ring-rose-500 rounded"
+                  >
+                    Welcome Intro
+                  </button>
+                </>
+              )}
             </div>
           </div>
 

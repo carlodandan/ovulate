@@ -3,7 +3,8 @@ const Header = ({
   dailyEntriesCount = 0,
   mode = 'standard',
   onToggleMode,
-  onClearAllData
+  onClearAllData,
+  onShowSplash
 }) => {
   const getCycleStats = () => {
     if (cycles.length === 0) {
@@ -37,8 +38,15 @@ const Header = ({
       <div className="relative z-10 px-5 py-5 sm:px-8 sm:py-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           {/* App Brand */}
-          <div className="flex items-center gap-3.5">
-            <div className="relative p-2.5 bg-white/95 rounded-2xl shadow-md ring-1 ring-black/5 flex items-center justify-center shrink-0">
+          <div 
+            onClick={onShowSplash}
+            role={onShowSplash ? "button" : undefined}
+            tabIndex={onShowSplash ? 0 : undefined}
+            onKeyDown={onShowSplash ? (e) => { if (e.key === 'Enter' || e.key === ' ') onShowSplash(); } : undefined}
+            className={`flex items-center gap-3.5 select-none ${onShowSplash ? 'cursor-pointer group' : ''}`}
+            title={onShowSplash ? "View Welcome Intro Screen" : undefined}
+          >
+            <div className="relative p-2.5 bg-white/95 rounded-2xl shadow-md ring-1 ring-black/5 flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
               <img
                 src="/logos/ovulate@512x512-nobg.png"
                 alt="Ovulate Logo"

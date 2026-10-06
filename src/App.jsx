@@ -8,8 +8,10 @@ import Footer from './components/Footer';
 import DailyEntryModal from './components/journal/DailyEntryModal';
 import CycleSummaryView from './components/journal/CycleSummaryView';
 import { reconstructCyclesFromEntries } from './utils/journalCalculations';
+import SplashScreen from './components/splash/SplashScreen';
 
 function App() {
+  const [hasEntered, setHasEntered] = useState(false);
   const [cycles, setCycles] = useState(() => {
     try {
       const savedCycles = localStorage.getItem('menstrualCycles');
@@ -157,8 +159,12 @@ function App() {
   const currentModalEntry = selectedDateStr ? dailyEntries[selectedDateStr] : null;
   const dailyEntriesCount = Object.keys(dailyEntries).length;
 
+  if (!hasEntered) {
+    return <SplashScreen onProceed={() => setHasEntered(true)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-[#FAF7F9] text-gray-900 relative selection:bg-rose-100 selection:text-rose-900 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FAF7F9] text-gray-900 relative selection:bg-rose-100 selection:text-rose-900 flex flex-col justify-between animate-fadeIn">
       {/* Subtle ambient lighting glows */}
       <div className="fixed top-0 left-1/4 w-96 h-96 bg-rose-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-200/15 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -171,7 +177,8 @@ function App() {
           dailyEntriesCount={dailyEntriesCount}
           mode={appMode}
           onToggleMode={setAppMode}
-          onClearAllData={clearAllData} 
+          onClearAllData={clearAllData}
+          onShowSplash={() => setHasEntered(false)}
         />
 
         {/* Desktop Layout (>= 1024px) */}
@@ -352,7 +359,7 @@ function App() {
         </div>
 
         {/* Footer */}
-        <Footer />
+        <Footer onShowSplash={() => setHasEntered(false)} />
       </main>
 
       {/* Daily Entry Modal */}
